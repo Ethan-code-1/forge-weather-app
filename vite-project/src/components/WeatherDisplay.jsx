@@ -10,16 +10,30 @@ const WeatherDisplay = ({city, lat, lon}) => {
 
 
     useEffect(() => {
-        const fetchQuestions = async() => {
+        const fetchWeatherData = async() => {
             
+            const url = new URL("https://api.openweathermap.org/data/2.5/onecall?");
+
+            url.searchParams.append("lat", lat);
+            url.searchParams.append("lon", lon)
+            url.searchParams.append("appid", API_KEY)
             
-            //const response = await fetch()
+            try{
+                const response = await fetch(url);
+                const data = await response.json();
+
+                console.log(data); 
+            } catch (error){
+                console.log("There was an error fetching the data from the endpoint");
+            }
         }
-    })
+
+        fetchWeatherData(); 
+    }, [lat, lon])
 
     return (
         <>
-
+            <p>sdasdasd</p>
         </>
     )
 
