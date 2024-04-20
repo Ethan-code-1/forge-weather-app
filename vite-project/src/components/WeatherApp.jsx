@@ -1,12 +1,14 @@
 import { TextField } from '@mui/material';
 import React, {useEffect, useState} from 'react'
 import GetInfo from './GetInfo';
-import AskCity from './GetInfo';
+import WeatherDisplay from './WeatherDisplay';
 
 const WeatherApp = () => {
 
     //Initialize all states 
     const [city, setCity] = useState(''); 
+    const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
 
 
 
@@ -23,9 +25,9 @@ const WeatherApp = () => {
     return (
         <>
             {city === '' ? (
-                <GetInfo city = {city} setCity = {setCity}></GetInfo>
+                <GetInfo city = {city} setCity = {setCity} latitude = {latitude} setLatitude = {setLatitude} longitude = {longitude} setLongitude = {setLongitude}></GetInfo>
             ) : (
-                <p>There is a city</p>
+               <WeatherDisplay city = {city} lat = {latitude} lon = {longitude}></WeatherDisplay>
             )}
         </>
     );
