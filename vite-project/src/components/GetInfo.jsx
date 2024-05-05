@@ -40,7 +40,7 @@ const GetInfo = ({city, setCity, latitude, setLatitude, longitude, setLongitude}
             <h1>Weather App</h1>
             <p>Welcome, please enter a city:</p>
             <form className = 'cityForm' onSubmit = {processInput}>
-                <TextField type = "text" name = 'city'></TextField>
+                <TextField className = 'textbox' type = "text" name = 'city'></TextField>
                 <Button variant="contained" type = "submit">Go</Button>
             </form>
         </>

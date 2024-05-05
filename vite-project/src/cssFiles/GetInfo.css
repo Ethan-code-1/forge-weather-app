@@ -1,4 +1,11 @@
 .cityForm{
     display: flex;
     padding-top: 20px;
+    color: white;
+}
+
+.textbox{
+    background-color: white;
+    border-radius: 7px; 
+
 }
