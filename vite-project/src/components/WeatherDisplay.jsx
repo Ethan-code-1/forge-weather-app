@@ -1,93 +1,163 @@
-import React, {useEffect, useState} from 'react'
-import {Button, TextField } from '@mui/material';
-import CurrentWeather from './currentWeather'; 
-import WeatherByHourTile from './WeatherByHourTile'
-import '../cssFiles/WeatherDisplay.css'
+import React, { useEffect, useState } from 'react';
+import { Button, TextField } from '@mui/material';
+import CurrentWeather from './currentWeather';
+import WeatherByHourTile from './WeatherByHourTile';
+import WeatherByDayTile from './WeatherByDayTile';
 
-const WeatherDisplay = ({city, lat, lon}) => {
+import '../cssFiles/WeatherDisplay.css';
 
-    //Setting up API and weatherData state the stores API feedback
+const WeatherDisplay = ({ city, lat, lon }) => {
+    // Setting up API and weatherData state that stores API feedback
     const [weatherData, setWeatherData] = useState(null);
     const [hourlyForecast, setHourlyForecast] = useState([]);
+    const [dailyForecast, setDailyForecast] = useState([]);
+    const [popularArticles, setPopularArticles] = useState([])
     const [timezone, setTimezone] = useState(null);
 
-
-
     const API_KEY = import.meta.env.VITE_Open_Weather_API2;
+    const API_KEY_NY = import.meta.env.VITE_NY_TIMES_API;
 
-    //For fetching current weather data
+    // For fetching current weather data
     useEffect(() => {
-        const fetchWeatherData = async() => {
-            
-            const url = new URL("https://api.openweathermap.org/data/2.5/weather?");
+        const fetchWeatherData = async () => {
+            const url = new URL('https://api.openweathermap.org/data/2.5/weather?');
+            url.searchParams.append('lat', lat);
+            url.searchParams.append('lon', lon);
+            url.searchParams.append('units', 'imperial');
+            url.searchParams.append('appid', API_KEY);
 
-            url.searchParams.append("lat", lat);
-            url.searchParams.append("lon", lon)
-            url.searchParams.append("units", "imperial")
-            url.searchParams.append("appid", API_KEY)
-            
-            try{
+            try {
                 const response = await fetch(url);
                 const data = await response.json();
 
-                if(data){
-                    setWeatherData(data)
+                if (data) {
+                    setWeatherData(data);
                 }
-            } catch (error){
-                console.log("There was an error fetching the data from the endpoint");
+            } catch (error) {
+                console.log('There was an error fetching the data from the endpoint');
             }
-        }
+        };
 
-        fetchWeatherData(); 
-    }, [lat, lon])
+        fetchWeatherData();
+    }, [lat, lon]);
 
-
-    //For fetching weather data for next 24 hours 
+    // For fetching weather data for next 24 hours
     useEffect(() => {
         const fetchHourlyForecast = async () => {
             const hourlyForecastUrl = new URL('https://pro.openweathermap.org/data/2.5/forecast/hourly?');
             hourlyForecastUrl.searchParams.append('lat', lat);
             hourlyForecastUrl.searchParams.append('lon', lon);
-            hourlyForecastUrl.searchParams.append("units", "imperial")
+            hourlyForecastUrl.searchParams.append('units', 'imperial');
             hourlyForecastUrl.searchParams.append('appid', API_KEY);
             hourlyForecastUrl.searchParams.append('cnt', '24');
 
-            try{
-                const response = await fetch(hourlyForecastUrl);
+            console.log(hourlyForecastUrl);
 
+            try {
+                const response = await fetch(hourlyForecastUrl);
                 const data = await response.json();
 
-                if(data){
+                if (data) {
                     setTimezone(data.city.timezone);
                     setHourlyForecast(data.list);
                 }
-            }catch (error){
-                console.log("There was an error getting hourly forcast data");
+            } catch (error) {
+                console.log('There was an error getting hourly forecast data');
             }
-        }
+        };
 
-        fetchHourlyForecast(); 
-    }, [lat, lon])
+        fetchHourlyForecast();
+    }, [lat, lon]);
+
+    //Fetching data for next 7 days 
+    useEffect(() => {
+        const fetchDailyForecast = async () => {
+            const dailyForecastUrl = new URL('https://api.openweathermap.org/data/2.5/forecast/daily?');
+            dailyForecastUrl.searchParams.append('lat', lat);
+            dailyForecastUrl.searchParams.append('lon', lon);
+            dailyForecastUrl.searchParams.append('units', 'imperial');
+            dailyForecastUrl.searchParams.append('appid', API_KEY);
+            dailyForecastUrl.searchParams.append('cnt', '7');
+
+            try {
+                const response = await fetch(dailyForecastUrl);
+                const data = await response.json();
+
+                if (data) {
+                    //setTimezone(data.city.timezone)
+                    setDailyForecast(data.list)
+                }
+            } catch (error) {
+                console.log('There was an error getting hourly forecast data');
+            }
+        };
+
+        fetchDailyForecast();
+    }, [lat, lon]);
+
+    //Fetching NY times: https://api.nytimes.com/svc/mostpopular/v2/viewed/1.json?api-key=yourkey
+    useEffect(() => {
+        const fetchArticles = async () => {
+            const nyURL = new URL('https://api.nytimes.com/svc/mostpopular/v2/viewed/1.json?');
+            nyURL.searchParams.append('api-key', API_KEY_NY);
+
+            try {
+                const response = await fetch(nyURL);
+                const data = await response.json();
+
+                if (data) {
+                    //Get the 5 most popular articles in the last day 
+                    setPopularArticles(data.results.slice(0, 5));
+                }
+            } catch (error) {
+                console.log('There was an error getting hourly forecast data');
+            }
+        };
+
+        fetchArticles();
+    }, []);
+
+
+
 
     return (
-        <div className = "weatherDisplayMain">
+        <div className="weatherDisplayMain">
             <div className="currentWeatherInfo">
-                {weatherData && (
-                    <>
-                        <CurrentWeather weatherData={weatherData}  />
-                    </>
-                )}
-            </div>
-            <div className = 'hourly-forecast'>
-                {hourlyForecast.map((hour, index) => (
-                    <WeatherByHourTile key = {index} temp = {hour.main.temp} icon = {hour.weather.icon} time = {hour.dt} timezone = {timezone}/>
-                ))}
+                {weatherData && <CurrentWeather weatherData={weatherData} />}
             </div>
 
+            <div className="two-columns">
+                <div className="left-column">
+                    <h4 className = "header1">Hourly Forcast</h4>
+                    <hr></hr>
+                    <div>
+                        {hourlyForecast.map((hour, index) => (
+                            <WeatherByHourTile key = {index} temp = {hour.main.temp} icon = {hour.weather[0].icon} time = {hour.dt} timezone = {timezone}/>
+                        ))}
+                    </div>
+                </div>
+                <div className="right-column">
+                    <h4 className = "header1">Daily Forcast</h4>
+                    <hr></hr>
+
+                    <div>
+                        {dailyForecast.map((day, index) => (
+                            <WeatherByDayTile key = {index} min = {Math.round(day.temp.min)} max = {Math.round(day.temp.max)} icon = {day.weather[0].icon} timezone = {timezone} day = {index}/>
+                        ))}
+                    </div>
+                    <hr></hr>
+                    <h4>News</h4>
+                        {popularArticles.map((article, index) => (
+                            <div key = {index} className = "newsArticle">
+                                <a className = "linksToA" href = {article.url}>{article.title}</a>
+                                <p>{article.byline}</p>
+                                <img src = {article.media[0]["media-metadata"][0].url}></img>
+                            </div>
+                        ))}
+                </div>
+            </div>
         </div>
-    )
-
+    );
 };
-
 
 export default WeatherDisplay;

@@ -23,7 +23,6 @@ const currentWeather = ({weatherData}) => {
 
                     <p>{currentWeatherData.weather[0].main}</p>
 
-                    <hr></hr>
                 </>
             )}
         </>

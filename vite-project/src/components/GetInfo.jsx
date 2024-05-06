@@ -36,14 +36,16 @@ const GetInfo = ({city, setCity, latitude, setLatitude, longitude, setLongitude}
     }
 
     return (
-        <>
-            <h1>Weather App</h1>
-            <p>Welcome, please enter a city:</p>
-            <form className = 'cityForm' onSubmit = {processInput}>
-                <TextField className = 'textbox' type = "text" name = 'city'></TextField>
-                <Button variant="contained" type = "submit">Go</Button>
-            </form>
-        </>
+        <div>
+            <div className = "getInfoM">
+                <h1>Weather App</h1>
+                <p>Welcome, please enter a city:</p>
+                <form className = 'cityForm' onSubmit = {processInput}>
+                    <TextField className = 'textbox' type = "text" name = 'city'></TextField>
+                    <Button variant="contained" type = "submit">Go</Button>
+                </form>
+            </div>
+        </div>
     )
 
 };
