@@ -2,6 +2,8 @@
     display: flex;
     padding-top: 20px;
     color: white;
+    justify-content: center;
+
 }
 
 .textbox{
@@ -10,3 +12,7 @@
 
 }
 
+.getInfoM{
+    margin-top: 80%;
+
+}
