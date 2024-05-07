@@ -82,13 +82,7 @@ body {
   text-align: center; 
 }
 
-.linksToA{
-  color: rgb(242, 242, 242);
-  text-decoration: underline;
-}
 
-.linksToA:hover{
-  color: rgb(63, 185, 255); 
-}
+
 
 
