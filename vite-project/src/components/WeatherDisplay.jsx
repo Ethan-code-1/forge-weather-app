@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Container, Link, CardMedia,  Paper, Grid, Card, CardContent, Typography } from '@mui/material';
 import CurrentWeather from './currentWeather';
 import WeatherByHourTile from './WeatherByHourTile';
 import WeatherByDayTile from './WeatherByDayTile';
@@ -118,8 +118,6 @@ const WeatherDisplay = ({ city, lat, lon }) => {
     }, []);
 
 
-
-
     return (
         <div className="weatherDisplayMain">
             <div className="currentWeatherInfo">
@@ -136,6 +134,7 @@ const WeatherDisplay = ({ city, lat, lon }) => {
                         ))}
                     </div>
                 </div>
+
                 <div className="right-column">
                     <h4 className = "header1">Daily Forcast</h4>
                     <hr></hr>
@@ -146,14 +145,24 @@ const WeatherDisplay = ({ city, lat, lon }) => {
                         ))}
                     </div>
                     <hr></hr>
-                    <h4>News</h4>
+                    <h4>Trending News</h4>
+                    <Paper style={{ maxHeight: 600, maxWidth: 600, overflow: 'auto', display: 'block', margin: 'auto'}}>
                         {popularArticles.map((article, index) => (
-                            <div key = {index} className = "newsArticle">
-                                <a className = "linksToA" href = {article.url}>{article.title}</a>
-                                <p>{article.byline}</p>
-                                <img src = {article.media[0]["media-metadata"][0].url}></img>
-                            </div>
+                            <Card key={index}>
+                                <CardContent>
+                                    <Link href={article.url} underline="hover" color="black">
+                                        <Typography variant="h5">{article.title}</Typography>
+                                    </Link>
+                                    <Typography variant="body2">{article.byline}</Typography>
+                                </CardContent>
+                                <CardMedia style={{ display: 'block', maxWidth: 70, maxHeight: 70, margin: 'auto' }}
+                                    component="img"
+                                    height="20"
+                                    image={article.media[0]["media-metadata"][0].url}
+                                />
+                            </Card>
                         ))}
+                    </Paper>
                 </div>
             </div>
         </div>

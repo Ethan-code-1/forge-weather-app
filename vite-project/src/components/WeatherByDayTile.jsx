@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {Button, TextField } from '@mui/material';
+import '../cssFiles/WeatherByHourTile.css';
 
 
 
@@ -31,8 +32,8 @@ const weatherByDayTile = ({min, max, icon, timezone, day}) => {
     return (
         <>
             <div className='hourRow'>
-                <h5>{dayOfWeekName}</h5>
-                <p className = "hourlyWeatherP">H: {max}&deg;F L: {min}&deg;F </p>  <img className = "icon" src={urlIcon}></img>
+                <h5 className ="dailyF">{dayOfWeekName} </h5>
+                <p className = "hourlyWeatherP"> H: {max}&deg;F L: {min}&deg;F </p>  <img className = "icon" src={urlIcon}></img>
             </div>
         </>
 
